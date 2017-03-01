@@ -34,7 +34,7 @@ def start():
 def move():
     data = bottle.request.json
 
-    dir = check_collisions(data['coords'])
+    dir = check_collisions(data["coords"])
 
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
