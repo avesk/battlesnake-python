@@ -34,13 +34,35 @@ def start():
 def move():
     data = bottle.request.json
 
+    dir = check_collisions(data['coords'])
+
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
 
     return {
-        'move': 'left',
+        'move': dir,
         'taunt': 'battlesnake-python!'
     }
+
+def check_collisions(coords):
+    head = coords[0]
+    x = head[0]
+    y = head[1]
+    horiz = {'left' : x-1, 'right' : x+1}
+    vert = {'up' : y+1, 'down' : y-1}
+
+    for coord in coords:
+        if coord != [ horiz['left'], y ]:
+            return 'left'
+        if coord != [ horiz['right'], y ]:
+            return 'right'
+        if coord != [ x, vert['up'] ]:
+            return 'up'
+        if coord != [ x, vert['down'] ]:
+            return 'down'
+
+        else return 'down'
+
 
 
 # Expose WSGI app (so gunicorn can find it)
