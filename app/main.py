@@ -61,7 +61,8 @@ def check_collisions(coords):
         if coord != [ x, vert['down'] ]:
             return 'down'
 
-        else return 'down'
+        else:
+            return 'down'
 
 
 
