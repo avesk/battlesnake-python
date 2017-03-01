@@ -40,7 +40,7 @@ def move():
     dir = directions[2]
     
     return {
-        'move': dir,
+        'move': 'left',
         'taunt': 'battlesnake-python!'
     }
 
