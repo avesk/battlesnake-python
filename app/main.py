@@ -37,9 +37,10 @@ def move():
 
     # dir = check_collisions(coords)
     directions = ['up', 'down', 'left', 'right']
+    dir = directions[2]
     
     return {
-        'move': 'left',
+        'move': dir,
         'taunt': 'battlesnake-python!'
     }
 
