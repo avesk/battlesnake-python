@@ -39,7 +39,7 @@ def move():
     directions = ['up', 'down', 'left', 'right']
     
     return {
-        'move': 'down',
+        'move': 'left',
         'taunt': 'battlesnake-python!'
     }
 
