@@ -24,7 +24,7 @@ def start():
     # TODO: Do things with data
     
     return {
-        'color': '#00FF00',
+        'color': '#7300E6',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url,
         'name': 'EL CHUPA'
@@ -82,7 +82,7 @@ def find_close_food(data,xhead,yhead):
 
 def find_food(close_food,xhead,yhead,directions):
     closeFoodx = close_food[0]
-    closefoody = close_food[1]
+    closeFoody = close_food[1]
     movx = closeFoodx-xhead
     movy = closeFoody-yhead
     if movx !=0:
