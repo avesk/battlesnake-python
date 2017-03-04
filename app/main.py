@@ -24,10 +24,10 @@ def start():
     # TODO: Do things with data
     
     return {
-        'color': '#7300e6',
+        'color': '#00FF00',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url,
-        'name': 'EL CHUPACABRA'
+        'name': 'EL CHUPA'
     }
 
 '''def dangerzone(nextdirr):
@@ -36,15 +36,6 @@ def start():
         if nextdirr == parts:
             return False
     return True
-def computenextdirr(dirr,xhead,yhead):
-    if dirr == 'up':
-        return (xhead,yhead+1)
-    if dirr == 'down':
-        return (xhead,yhead-1)
-    if dirr == 'left':
-        return (xhead-1,yhead)
-    if dirr == 'right':
-        return (xhead+1,yhead) 
 '''
         
 @bottle.post('/move')
@@ -56,7 +47,7 @@ def move():
 
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
-    dirr = directions[1]
+    # dirr = directions[1]
     
     
     #grab head coordinates
@@ -69,7 +60,7 @@ def move():
     
 
     close_food = find_close_food(data,xhead,yhead)
-    dirr = find_food(close_food,xhead,yhead)
+    dirr = find_food(close_food,xhead,yhead,directions)
     return {
         'move': dirr,
         'taunt': 'battlesnake-python!'
@@ -87,8 +78,9 @@ def find_close_food(data,xhead,yhead):
             closeFoodDist = dist
             closeFoodx = food[0]
             closeFoody = food[1]
-    return close_food(closeFoodx,closeFoody)
-def find_food(close_food,xhead,yhead):
+    return (closeFoodx,closeFoody)
+
+def find_food(close_food,xhead,yhead,directions):
     closeFoodx = close_food[0]
     closefoody = close_food[1]
     movx = closeFoodx-xhead
@@ -98,24 +90,13 @@ def find_food(close_food,xhead,yhead):
             return directions[3]
         elif movx<0:
             return directions[2]
-    elif movy !=0:
+    if movy !=0:
         if movy>0:
             return directions[1]
         elif movy<0:
             return directions[0]
+    return directions[1]
 
-def dontHitWalls():
-    if yhead == board_height-1:
-        dirr = directions[2]  
-   
-    if xhead == 0:
-        dirr = directions[0]
-        
-    if yhead == 0:
-        dirr = directions[3]
-    
-    if xhead == board_width-1 and yhead != board_height-1:
-        dirr = directions[1]
 
 
 # Expose WSGI app (so gunicorn can find it)
