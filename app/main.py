@@ -27,7 +27,7 @@ def start():
         'color': '#7300E6',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url,
-        'name': 'EL CHUPA'
+        'name': 'EL CHUPACabra'
     }
 
 '''def dangerzone(nextdirr):
