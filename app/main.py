@@ -3,6 +3,7 @@ import os
 import random
 
 
+
 @bottle.route('/static/<path:path>')
 def static(path):
     return bottle.static_file(path, root='static/')
@@ -21,50 +22,100 @@ def start():
     )
 
     # TODO: Do things with data
-
+    
     return {
         'color': '#00FF00',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url,
-        'name': 'battlesnake-python'
+        'name': 'EL CHUPA'
     }
 
-
+'''def dangerzone(nextdirr):
+    bodyParts = data['snakes'][0]['coords']
+    for parts in bodyParts:
+        if nextdirr == parts:
+            return False
+    return True
+def computenextdirr(dirr,xhead,yhead):
+    if dirr == 'up':
+        return (xhead,yhead+1)
+    if dirr == 'down':
+        return (xhead,yhead-1)
+    if dirr == 'left':
+        return (xhead-1,yhead)
+    if dirr == 'right':
+        return (xhead+1,yhead) 
+'''
+        
 @bottle.post('/move')
 def move():
     data = bottle.request.json
-    snakes = data['snakes']
-    d = snakes[0]
-    dirr = d['coords']
+    board_height = data['height']
+    board_width = data['width']
+    
 
-    step = check_collisions(dirr)
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
+    dirr = directions[1]
+    
+    
+    #grab head coordinates
+    coords1 = data['snakes']
+    coords2 = coords1[0]
+    coords = coords2['coords']
+    head = coords[0]
+    xhead = head[0]
+    yhead = head[1]
+    
 
+    close_food = find_close_food(data,xhead,yhead)
+    dirr = find_food(close_food,xhead,yhead)
     return {
-        'move': step,
+        'move': dirr,
         'taunt': 'battlesnake-python!'
     }
+def find_close_food(data,xhead,yhead):
+    food = data['food']
+    closeFoodDist = 1000
+    closeFoodx = 0
+    closeFoody = 0
+    for food in food:
+        foodx = food[0]
+        foody = food[1]
+        dist = abs(xhead-foodx) + abs(yhead-foody)
+        if dist < closeFoodDist:
+            closeFoodDist = dist
+            closeFoodx = food[0]
+            closeFoody = food[1]
+    return close_food(closeFoodx,closeFoody)
+def find_food(close_food,xhead,yhead):
+    closeFoodx = close_food[0]
+    closefoody = close_food[1]
+    movx = closeFoodx-xhead
+    movy = closeFoody-yhead
+    if movx !=0:
+        if movx>0:
+            return directions[3]
+        elif movx<0:
+            return directions[2]
+    elif movy !=0:
+        if movy>0:
+            return directions[1]
+        elif movy<0:
+            return directions[0]
 
-def check_collisions(coords):
-    head = coords[0]
-    x = head[0]
-    y = head[1]
-    horiz = {'left' : x-1, 'right' : x+1}
-    vert = {'up' : y+1, 'down' : y-1}
-
-    for coord in coords:
-        if coord != [ horiz['left'], y ]:
-            return 'left'
-        if coord != [ horiz['right'], y ]:
-            return 'right'
-        if coord != [ x, vert['up'] ]:
-            return 'up'
-        if coord != [ x, vert['down'] ]:
-            return 'down'
-
-        else:
-            return 'down'
+def dontHitWalls():
+    if yhead == board_height-1:
+        dirr = directions[2]  
+   
+    if xhead == 0:
+        dirr = directions[0]
+        
+    if yhead == 0:
+        dirr = directions[3]
+    
+    if xhead == board_width-1 and yhead != board_height-1:
+        dirr = directions[1]
 
 
 # Expose WSGI app (so gunicorn can find it)
