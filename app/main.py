@@ -47,7 +47,7 @@ def move():
 
     # TODO: Do things with data
     directions = ['up', 'down', 'left', 'right']
-    # dirr = directions[1]
+    dirr = directions[1]
     
     
     #grab head coordinates
@@ -70,14 +70,14 @@ def find_close_food(data,xhead,yhead):
     closeFoodDist = 1000
     closeFoodx = 0
     closeFoody = 0
-    for food in food:
-        foodx = food[0]
-        foody = food[1]
+    for foodbits in food:
+        foodx = foodbits[0]
+        foody = foodbits[1]
         dist = abs(xhead-foodx) + abs(yhead-foody)
         if dist < closeFoodDist:
             closeFoodDist = dist
-            closeFoodx = food[0]
-            closeFoody = food[1]
+            closeFoodx =foodbits[0]
+            closeFoody = foodbits[1]
     return (closeFoodx,closeFoody)
 
 def find_food(close_food,xhead,yhead,directions):
