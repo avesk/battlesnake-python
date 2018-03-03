@@ -3,16 +3,9 @@ import os
 import random
 
 
-
 @bottle.route('/')
 def static():
     return "the server is running"
-
-
-@bottle.route('/static/<path:path>')
-def static(path):
-    return bottle.static_file(path, root='static/')
-
 
 @bottle.post('/start')
 def start():
@@ -29,18 +22,28 @@ def start():
     # TODO: Do things with data
 
     return {
-        'color': '#00FF00',
+        'color': '#7300E6',
         'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
         'head_url': head_url
     }
 
+'''def dangerzone(nextdirr):
+    bodyParts = data['snakes'][0]['coords']
+    for parts in bodyParts:
+        if nextdirr == parts:
+            return False
+    return True
+'''
 
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+    board_height = data['height']
+    board_width = data['width']
+
 
     # TODO: Do things with data
-    
+
     directions = ['up', 'down', 'left', 'right']
     direction = random.choice(directions)
     print direction
@@ -48,6 +51,38 @@ def move():
         'move': direction,
         'taunt': 'battlesnake-python!'
     }
+def find_close_food(data,xhead,yhead):
+    food = data['food']
+    closeFoodDist = 1000
+    closeFoodx = 0
+    closeFoody = 0
+    for foodbits in food:
+        foodx = foodbits[0]
+        foody = foodbits[1]
+        dist = abs(xhead-foodx) + abs(yhead-foody)
+        if dist < closeFoodDist:
+            closeFoodDist = dist
+            closeFoodx =foodbits[0]
+            closeFoody = foodbits[1]
+    return (closeFoodx,closeFoody)
+
+def find_food(close_food,xhead,yhead,directions):
+    closeFoodx = close_food[0]
+    closeFoody = close_food[1]
+    movx = closeFoodx-xhead
+    movy = closeFoody-yhead
+    if movx !=0:
+        if movx>0:
+            return directions[3]
+        elif movx<0:
+            return directions[2]
+    if movy !=0:
+        if movy>0:
+            return directions[1]
+        elif movy<0:
+            return directions[0]
+    return directions[1]
+
 
 
 # Expose WSGI app (so gunicorn can find it)
