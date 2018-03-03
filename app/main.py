@@ -51,39 +51,6 @@ def move():
         'move': direction,
         'taunt': 'battlesnake-python!'
     }
-def find_close_food(data,xhead,yhead):
-    food = data['food']
-    closeFoodDist = 1000
-    closeFoodx = 0
-    closeFoody = 0
-    for foodbits in food:
-        foodx = foodbits[0]
-        foody = foodbits[1]
-        dist = abs(xhead-foodx) + abs(yhead-foody)
-        if dist < closeFoodDist:
-            closeFoodDist = dist
-            closeFoodx =foodbits[0]
-            closeFoody = foodbits[1]
-    return (closeFoodx,closeFoody)
-
-def find_food(close_food,xhead,yhead,directions):
-    closeFoodx = close_food[0]
-    closeFoody = close_food[1]
-    movx = closeFoodx-xhead
-    movy = closeFoody-yhead
-    if movx !=0:
-        if movx>0:
-            return directions[3]
-        elif movx<0:
-            return directions[2]
-    if movy !=0:
-        if movy>0:
-            return directions[1]
-        elif movy<0:
-            return directions[0]
-    return directions[1]
-
-
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
