@@ -64,14 +64,27 @@ def move():
     move = 'left'
 
     # if health < 25: Astar Closest food
-    if Vince.health < 101:
+    print(len(Vince.body))
+    if Vince.health < 25 or len(Vince.body) < 4:
+        GameGrid.blacklistTail(Vince.tail)
         closestFood = Vince.closestFood(data['board']['food'])
         print(closestFood)
         path_to_food = AS.find_path(GameGrid.cells, Vince.head, closestFood)
+        print("food:")
         print(path_to_food)
-        move = get_dir(Vince.head, path_to_food[1])
+        if path_to_food:
+            move = get_dir(Vince.head, path_to_food[1])
+        else: # move to a none dangerous zone
+            move = 'right'
     else: # Astar our tail
-        move = 'right'
+        GameGrid.whitelistTail(Vince.tail) # set Vince's tail to walkable terrain
+        path_to_tail = AS.find_path(GameGrid.cells, Vince.head, Vince.tail)
+        print("tail:")
+        print(path_to_tail)
+        if path_to_tail:
+            move = get_dir(Vince.head, path_to_tail[1])
+        else: # move to a none dangerous zone
+            move = 'right'
 
     direction = move
     return {
