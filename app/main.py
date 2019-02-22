@@ -34,7 +34,7 @@ def start():
     # init grid class
     GameGrid = Grid(data['board'])
     # init Astar class
-    AS = AStar
+    AS = AStar()
 
     # set state
     state(Vince, Snakes, GameGrid, AS)
@@ -58,16 +58,38 @@ def move():
     # update grid class
     GameGrid = state.GameGrid
     GameGrid.update(data['board'])
-    print(GameGrid.cells)
+    AS = state.AS
+
+    # init move
+    move = 'left'
 
     # if health < 25: Astar Closest food
-    # else Astar our tail
+    if Vince.health < 101:
+        closestFood = Vince.closestFood(data['board']['food'])
+        print(closestFood)
+        path_to_food = AS.find_path(GameGrid.cells, Vince.head, closestFood)
+        print(path_to_food)
+        move = get_dir(Vince.head, path_to_food[1])
+    else: # Astar our tail
+        move = 'right'
 
-    direction = 'left'
+    direction = move
     return {
         'move': direction,
         'taunt': 'battlesnake-python!'
     }
+
+def get_dir(start, end):
+    direction = (start[0] - end[0], start[1] - end[1])
+    print(direction)
+    if(direction == (0, -1)):
+        return 'down'
+    elif(direction == (0, 1)):
+        return 'up'
+    elif(direction == (-1, 0)):
+        return 'right'
+    elif(direction == (1, 0)):
+        return 'left'
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
