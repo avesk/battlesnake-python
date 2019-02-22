@@ -6,10 +6,11 @@ from OurSnake import OurSnake
 from Snake import Snake
 from grid import Grid
 
-Vince = None
-Snakes = []
-GameGrid = None
-AS =  None
+def state(Vince, Snakes, GameGrid, AS):   
+    state.Vince = Vince
+    state.Snakes = Snakes
+    state.GameGrid = GameGrid
+    state.AS =  AS
 
 @bottle.route('/')
 def static():
@@ -35,6 +36,9 @@ def start():
     # init Astar class
     AS = AStar
 
+    # set state
+    state(Vince, Snakes, GameGrid, AS)
+
     return {
         'color': '#7300E6',
         'taunt': '{} ({}x{})'.format(game_id, 1, 1),
@@ -45,8 +49,16 @@ def start():
 def move():
     data = bottle.request.json
     # update ourSnake class
+    Vince = state.Vince
+    Vince.update(data['you'])
     # update snake classes
-    # update board class
+    Snakes = state.Snakes
+    for snake in Snakes:
+        snake.update(data['board']['snakes'])
+    # update grid class
+    GameGrid = state.GameGrid
+    GameGrid.update(data['board'])
+    print(GameGrid.cells)
 
     # if health < 25: Astar Closest food
     # else Astar our tail
